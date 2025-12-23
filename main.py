@@ -1,17 +1,15 @@
-# Import Turtle Graphics module
+# Import Turtle Graphics module and random modules
 import turtle
+import random
 
 # Define program constants
 WIDTH = 500
 HEIGHT = 500
-DELAY = 200   #Milliseconds
+DELAY = 200  # Milliseconds
+FOOD_SIZE = 10
 
-offsets = {
-    "up": (0, 20),
-    "down": (0, -20),
-    "left":(-20, 0),
-    "right": (20, 0)
-}
+offsets = {"up": (0, 20), "down": (0, -20), "left": (-20, 0), "right": (20, 0)}
+
 
 def go_up():
     global snake_direction
@@ -37,38 +35,74 @@ def go_left():
         snake_direction = "left"
 
 
-
-def move_snake():
-    stamper.clearstamps()  #Remove the existing stamps made by stamper
+def game_loop():
+    stamper.clearstamps()  # Remove the existing stamps made by stamper
 
     new_head = snake[-1].copy()
     new_head[0] += offsets[snake_direction][0]
     new_head[1] += offsets[snake_direction][1]
 
-    # Add new head to the snake's body
-    snake.append(new_head)
+    # Check collisions
+    if (
+        new_head in snake
+        or new_head[0] < -WIDTH / 2
+        or new_head[0] > WIDTH / 2
+        or new_head[1] < -HEIGHT / 2
+        or new_head[1] > HEIGHT / 2
+    ):
+        turtle.bye()
+    else:
+        # Add new head to the snake's body
+        snake.append(new_head)
 
-    # Remove last segment of the snake
-    snake.pop(0)
+        # Check food collision
+        if not food_collision():
+            snake.pop(0)  # Same length unless fed
 
-    # Draw snake the first time
-    for segment in snake:
-        stamper.goto(segment[0], segment[1])
-        stamper.stamp()
+        # Draw snake the first time
+        for segment in snake:
+            stamper.goto(segment[0], segment[1])
+            stamper.stamp()
 
     # Refresh screen
+    screen.title(f:"Snake Game. Score: {score}")
     screen.update()
 
+
+
     # Rinse and repeat
-    turtle.ontimer(move_snake, DELAY)
+    turtle.ontimer(game_loop, DELAY)
+
+
+def food_collosion():
+    global food_pos, score
+    if get_distance(snake[-1], food_pos) < 20:
+        score += 1 
+        food_pos = get_random_food_pos()
+        food.goto(food_pos)
+        return True
+    return False
+
+
+def get_random_food_pos():
+    x = random.randint(-WIDTH / 2 + FOOD_SIZE, WIDTH / 2 - FOOD_SIZE)
+    y = random.randint(-HEIGHT / 2 + FOOD_SIZE, HEIGHT / 2 - FOOD_SIZE)
+    return (x, y)
+
+
+def get_distance(pos1, pos2):
+    x1, y1 = pos1
+    x2, y2 = pos2
+    distance = ((y2 - y1) ** 2 + (x2 - x1) ** 2) ** 0.5  # Pythagorran Theorem
+    return distance
 
 
 # Create a window to do the drawing
 screen = turtle.Screen()
-screen.setup(WIDTH, HEIGHT) #Setting the dimensions of Turtle Graphics window
+screen.setup(WIDTH, HEIGHT)  # Setting the dimensions of Turtle Graphics window
 screen.title("Snake Game")
-screen.bgcolor("magenta")
-screen.tracer(0) # Turn off automatic animation
+screen.bgcolor("tan")
+screen.tracer(0)  # Turn off automatic animation
 
 # Event handlers
 screen.listen()
@@ -83,19 +117,27 @@ stamper.shape("square")
 stamper.penup()
 
 # Create snake as a list of coordinates
-snake = [[0,0], [20, 0], [40, 0], [60, 0]]
-
+snake = [[0, 0], [20, 0], [40, 0], [60, 0]]
 snake_direction = "up"
+score = 0
 
 # Draw snake the first time
 for segment in snake:
     stamper.goto(segment[0], segment[1])
     stamper.stamp()
 
+# Food
+food = turtle.Turtle()
+food.shape("triangle")
+food.color("magenta")
+food.shapesize(FOOD_SIZE / 20)
+food.penup()
+food_pos = get_random_food_pos()
+food.goto(food_pos)
 
 # Set animation in motion
-move_snake()
-    
+game_loop()
+
 
 # Finish well
 turtle.done()

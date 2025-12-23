@@ -74,10 +74,11 @@ screen.tracer(0) # Turn off automatic animation
 screen.listen()
 screen.onkey(go_up, "Up")
 screen.onkey(go_right, "Right")
-screen.
+screen.onkey(go_down, "Down")
+screen.onkey(go_left, "Left")
 
 # Create a turtle to do the bidding
-stamper = turtle. Turtle()
+stamper = turtle.Turtle()
 stamper.shape("square")
 stamper.penup()
 

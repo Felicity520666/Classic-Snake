@@ -79,7 +79,7 @@ def game_loop():
             snake.pop(0)  # Same length unless fed
 
         # Draw snake
-        stamper.shape("assets/headsanta.png")
+        stamper.shape("assets/headsanta.gif")
         stamper.goto(snake[-1][0], snake[-1][1])
         stamper.stamp()
         stamper.shape("circle")
@@ -136,8 +136,8 @@ screen = turtle.Screen()
 screen.setup(WIDTH, HEIGHT)  # Setting the dimensions of Turtle Graphics window
 screen.title("Snake Game")
 screen.bgcolor("white")
-screen.register_shape("assets/foodcandy.png")
-screen.register_shape("assets/headsanta.png")
+screen.register_shape("assets/foodcandy.gif")
+screen.register_shape("assets/headsanta.gif")
 screen.tracer(0)  # Turn off automatic animation
 
 # Event handlers
@@ -153,7 +153,7 @@ stamper.penup()
 
 # Food
 food = turtle.Turtle()
-food.shape("assets/foodcandy.png")
+food.shape("assets/foodcandy.gif")
 food.shapesize(FOOD_SIZE / 20)
 food.penup()
 

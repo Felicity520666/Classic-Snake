@@ -1,3 +1,15 @@
+# Helper function 
+import os
+import sys
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 # Import Turtle Graphics module and random modules
 import turtle
 import random
@@ -136,7 +148,7 @@ screen = turtle.Screen()
 screen.setup(WIDTH, HEIGHT)  # Setting the dimensions of Turtle Graphics window
 screen.title("Snake Game")
 screen.bgcolor("white")
-screen.register_shape("assets/foodcandy.gif")
+screen.register_shape(resource_path("assets/foodcandy.gif"))
 screen.register_shape("assets/headsanta.gif")
 screen.tracer(0)  # Turn off automatic animation
 
